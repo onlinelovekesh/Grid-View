@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Grid Layout</string>
+    <string name="title">Title</string>
+    <string name="progress_bar_message">Progress bar message</string>
+</resources>
