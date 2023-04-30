@@ -63,7 +63,6 @@ class Registration : AppCompatActivity() {
                 password.isBlank() -> Toast.makeText(this, "Please enter your password", Toast.LENGTH_SHORT).show()
                 cnfPassword.isBlank() -> Toast.makeText(this, "Please enter Confirm password", Toast.LENGTH_SHORT).show()
                 else -> signUp(name, email, cnfPassword)
-
             }
         }
 
@@ -103,7 +102,8 @@ class Registration : AppCompatActivity() {
 
     private fun addUserToDatabase(name: String, email: String, pass: String) {
         val userDetails = User(auth.currentUser?.uid!!, name, email, pass)
-        myDbRef.child("Users").child(auth.currentUser?.uid!!).setValue(userDetails)
+        myDbRef.child("Users").child(auth.currentUser?.uid!!)
+            .child("UserInformation").setValue(userDetails)
             .addOnSuccessListener {
                 Toast.makeText(this, "User added to database", Toast.LENGTH_SHORT).show()
 
@@ -113,7 +113,6 @@ class Registration : AppCompatActivity() {
 
             }.addOnFailureListener {
                 Toast.makeText(this, "${it.message}", Toast.LENGTH_SHORT).show()
-
             }
     }
 

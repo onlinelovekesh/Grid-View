@@ -9,12 +9,8 @@ class User {
 
     constructor() {}
 
-    constructor(
-        uid1: String,
-        name1: String,
-        email1: String,
-        pass1: String
-    ) {//, profileImgUri1: String){
+    constructor(uid1: String, name1: String, email1: String, pass1: String)
+    {//, profileImgUri1: String){
         this.uid = uid1
         this.name = name1
         this.email = email1

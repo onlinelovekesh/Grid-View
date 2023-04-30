@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,25 +8,45 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity"
-    android:background="#f3f3f3">
+    android:background="@color/background">
 
-    <TextView
-        android:id="@+id/idTVHeading"
+    <LinearLayout
+        android:id="@+id/action_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:gravity="center"
-        android:padding="4dp"
-        android:text="@string/general"
-        android:textAlignment="center"
-        android:textColor="@color/purple_200"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:weightSum="5"
+        android:background="@color/purple_500"
+        android:gravity="end">
+
+        <ImageButton
+            android:id="@+id/heading"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/purple_500"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/add_new_foreground" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleSmallTitle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:foregroundGravity="center"
+        android:progressDrawable="@drawable/progress_bar"
+        android:progressTint="@color/background"
+        android:visibility="visible"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/idRVCourses"
+        android:id="@+id/itemView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/idTVHeading" />
+        android:layout_below="@id/action_bar" />
 
 </RelativeLayout>
+</layout>

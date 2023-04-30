@@ -15,6 +15,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class Login : AppCompatActivity() {
 
@@ -30,15 +32,22 @@ class Login : AppCompatActivity() {
         val logUsername = findViewById<TextView>(R.id.logUsername)
         val logGoToRegistration = findViewById<TextView>(R.id.logGoToRegistration)
 
-        logLoginBtn.setOnClickListener {
+        if (Firebase.auth.currentUser != null){
+            val i = Intent(this, MainActivity::class.java)
+            startActivity(i)
+            finish()
+        }else{
 
-            val email = logUsername.text.toString()
-            val pass = findViewById<EditText>(R.id.logPassword).text.toString()
+            logLoginBtn.setOnClickListener {
 
-            when {
-                email.isEmpty() -> Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show()
-                pass.isEmpty() -> Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show()
-                else -> signIn(email, pass)
+                val email = logUsername.text.toString()
+                val pass = findViewById<EditText>(R.id.logPassword).text.toString()
+
+                when {
+                    email.isEmpty() -> Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show()
+                    pass.isEmpty() -> Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show()
+                    else -> signIn(email, pass)
+                }
             }
         }
 
