@@ -44,10 +44,10 @@ class RecyclerViewAdapter(var context: Context, private var itemList: ArrayList<
         return itemList.size
     }
 
-    class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val itemName: TextView = itemView.findViewById(R.id.itemName)
-        val itemImage: ImageView = itemView.findViewById(R.id.itemImage)
-        val itemPrice: TextView = itemView.findViewById(R.id.itemPrice)
-        val gridViewItem : CardView = itemView.findViewById(R.id.gridView_item)
-    }
+class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    val itemName: TextView = itemView.findViewById(R.id.itemName)
+    val itemImage: ImageView = itemView.findViewById(R.id.itemImage)
+    val itemPrice: TextView = itemView.findViewById(R.id.itemPrice)
+    val gridViewItem : CardView = itemView.findViewById(R.id.gridView_item)
+}
 }

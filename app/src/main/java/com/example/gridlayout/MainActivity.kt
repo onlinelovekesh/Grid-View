@@ -40,8 +40,11 @@ class MainActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
 
-        binding.heading.setOnClickListener {
+        binding.addNewItem.setOnClickListener {
             startActivity(Intent(this,AddNewItem::class.java))
+        }
+        binding.goToCart.setOnClickListener {
+            startActivity(Intent(this,CartActivity::class.java))
         }
 
         getItems(progressBar)

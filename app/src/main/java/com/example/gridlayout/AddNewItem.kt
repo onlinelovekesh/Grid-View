@@ -30,6 +30,7 @@ class AddNewItem : AppCompatActivity() {
     private lateinit var storageReference: StorageReference
     private var imageUri: Uri? = null
     private lateinit var keyList: ArrayList<String>
+    //private var itemQuantity: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -145,7 +146,8 @@ class AddNewItem : AppCompatActivity() {
         val description = findViewById<EditText>(R.id.newItem_description).text.toString()
 
         val newItem = mDbRef.child("Users").child(auth.currentUser?.uid!!).child("Items").push()
-        val itemDetails = Items(newItem.key!!, profileImageUri, itemName, "Rs. $itemPrice",description)
+        val itemDetails = Items(newItem.key!!, profileImageUri, itemName, "Rs. $itemPrice",
+            description,"1")
 
         newItem.setValue(itemDetails).addOnSuccessListener {
 
