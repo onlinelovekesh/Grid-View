@@ -29,6 +29,7 @@ class RecyclerViewAdapter(var context: Context, private var itemList: ArrayList<
         Picasso.get().load(currentItem.itemImageUri).into(holder.itemImage)
         holder.itemName.text = currentItem.itemName
         holder.itemPrice.text = currentItem.itemPrice
+        holder.itemQuantity.text = currentItem.itemQuantity
 
         holder.gridViewItem.setOnClickListener {
             val i = Intent(context, ItemView::class.java)
@@ -36,6 +37,7 @@ class RecyclerViewAdapter(var context: Context, private var itemList: ArrayList<
             i.putExtra("itemUid", currentItem.itemUid)
             i.putExtra("itemImage",currentItem.itemImageUri)
             i.putExtra("itemPrice",currentItem.itemPrice)
+            i.putExtra("itemQuantity",currentItem.itemQuantity)
             context.startActivity(i)
         }
     }
@@ -48,6 +50,7 @@ class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val itemName: TextView = itemView.findViewById(R.id.itemName)
     val itemImage: ImageView = itemView.findViewById(R.id.itemImage)
     val itemPrice: TextView = itemView.findViewById(R.id.itemPrice)
+    val itemQuantity: TextView = itemView.findViewById(R.id.itemQuantity)
     val gridViewItem : CardView = itemView.findViewById(R.id.gridView_item)
 }
 }

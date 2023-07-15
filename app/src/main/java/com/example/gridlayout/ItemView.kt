@@ -3,10 +3,9 @@ package com.example.gridlayout
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.cardview.widget.CardView
+import androidx.databinding.DataBindingUtil
+import com.example.gridlayout.databinding.ActivityItemViewBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -16,77 +15,150 @@ import com.squareup.picasso.Picasso
 
 class ItemView : AppCompatActivity() {
 
-    private lateinit var myDbRef: DatabaseReference
+    private lateinit var binding: ActivityItemViewBinding
+    private lateinit var mDbRef: DatabaseReference
     private lateinit var auth: FirebaseAuth
     private lateinit var storageReference: StorageReference
     private var itemDescription: String? = null
-    //private var itemQuantity: String? = null
+    private var isFavorite: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_item_view)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_item_view)
 
         auth = FirebaseAuth.getInstance()
-        myDbRef = FirebaseDatabase.getInstance().reference
+        mDbRef = FirebaseDatabase.getInstance().reference
         storageReference = FirebaseStorage.getInstance().reference
-
 
         val itemName = intent.getStringExtra("itemName").toString() //from RecyclerViewAdaptor
         val itemUid = intent.getStringExtra("itemUid").toString()
         val itemImage = intent.getStringExtra("itemImage")
         val itemPrice = intent.getStringExtra("itemPrice").toString()
+        val itemQuantity = intent.getStringExtra("itemQuantity").toString()
 
-        val itemViewName = findViewById<TextView>(R.id.itemView_name)
-        val itemViewPrice = findViewById<TextView>(R.id.itemView_price)
-        val itemViewImage = findViewById<ImageView>(R.id.itemView_image)
-        val itemViewDescription = findViewById<TextView>(R.id.itemView_description)
+        binding.itemViewName.text = itemName
+        binding.itemViewPrice.text = itemPrice
+        binding.itemViewQuantity.text = itemQuantity
+        Picasso.get().load(itemImage).into(binding.itemViewImage)
+        binding.itemViewFavoriteBtn.setImageResource(R.drawable.favorite_icon_blank)
 
-        itemViewName.text = itemName
-        itemViewPrice.text = itemPrice
-
-        myDbRef.child("Users").child(auth.currentUser?.uid!!).child("Items")
+        mDbRef.child("Users").child(auth.currentUser?.uid!!).child("Items")
             .child(itemUid).get().addOnSuccessListener {
-                if (it.exists()){
+                if (it.exists()) {
                     itemDescription = it.child("itemDescription").value as String?
-                    itemViewDescription.text = itemDescription.toString()
-                }
-                else{
-                    Toast.makeText(this, "Unable to load data, please try again", Toast.LENGTH_SHORT).show()
+                    binding.itemViewDescription.text = itemDescription.toString()
+
+                    isFavorite = it.child("favorite").value as String?
+                    if (isFavorite == "Yes"){
+                        binding.itemViewFavoriteBtn.setImageResource(R.drawable.favorite_icon_filled)
+                    }else{
+                        binding.itemViewFavoriteBtn.setImageResource(R.drawable.favorite_icon_blank)
+                    }
+
+                } else {
+                    Toast.makeText(this, "Data not exists", Toast.LENGTH_SHORT).show()
                 }
             }.addOnFailureListener {
-                Toast.makeText(this, "Failed to load data, please try again", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Failed to load data, please try again", Toast.LENGTH_SHORT)
+                    .show()
             }
 
 
-        //itemViewDescription.text = itemDescription.toString()
-        Picasso.get().load(itemImage).into(itemViewImage)
 
 //############################################## Add item to cart ###########################################
 
-        val addToCart = findViewById<CardView>(R.id.itemView_addToCartBtnLayout)
-
-        addToCart.setOnClickListener {
-
-            val cartItemPath = myDbRef.child("Users").child(auth.currentUser?.uid!!)
-                .child("Cart").child(itemUid)
-            val itemDetails = Items(itemUid, itemImage!!, itemName, itemPrice,itemDescription!!,"1")
-
-            cartItemPath.setValue(itemDetails).addOnSuccessListener {
-
-                Toast.makeText(this, "Item added to cart", Toast.LENGTH_LONG).show()
-            }
-
+        binding.itemViewAddToCartBtnLayout.setOnClickListener {
+            addToCart(itemUid, itemImage,itemName,itemPrice,itemQuantity,isFavorite)
         }
+
+//############################################## Add item to favorites ###########################################
+            binding.itemViewFavoriteBtn.setOnClickListener {
+
+                mDbRef.child("Users").child(auth.currentUser?.uid!!).child("Items")
+                    .child(itemUid).get().addOnSuccessListener {
+                        if (it.exists()) {
+                            isFavorite = it.child("favorite").value as String?
+                            if (isFavorite == "Yes"){
+                                mDbRef.child("Users").child(auth.currentUser?.uid!!).child("WishList")
+                                    .child(itemUid).removeValue().addOnSuccessListener{
+
+                                        val itemDetails = Items(itemUid, itemImage!!, itemName, itemPrice, itemDescription!!, itemQuantity,
+                                            null, null,"No")
+
+                                        mDbRef.child("Users").child(auth.currentUser?.uid!!).child("Items").child(itemUid)
+                                            .setValue(itemDetails).addOnSuccessListener {
+
+                                                binding.itemViewFavoriteBtn.setImageResource(R.drawable.favorite_icon_blank)
+                                                Toast.makeText(this, "Item removed from wishlist", Toast.LENGTH_LONG).show()
+
+                                            }. addOnFailureListener {
+                                                Toast.makeText(this, "Not updated in child(Items)", Toast.LENGTH_LONG).show()
+                                            }
+
+                                    }.addOnFailureListener {
+                                        Toast.makeText(this, "Error! Try again", Toast.LENGTH_LONG).show()
+                                    }
+                            }else{
+                                val itemPath = mDbRef.child("Users").child(auth.currentUser?.uid!!).child("WishList")
+                                    .child(itemUid)
+                                val itemDetails = Items(itemUid, itemImage!!, itemName, itemPrice, itemDescription!!, itemQuantity,
+                                    null, null, "Yes")
+
+                                itemPath.setValue(itemDetails).addOnSuccessListener {
+
+                                    mDbRef.child("Users").child(auth.currentUser?.uid!!).child("Items").child(itemUid)
+                                        .setValue(itemDetails).addOnSuccessListener {
+                                            Toast.makeText(this, "Item added to wishlist", Toast.LENGTH_SHORT).show()
+
+                                            binding.itemViewFavoriteBtn.setImageResource(R.drawable.favorite_icon_filled)
+
+                                        }.addOnFailureListener {
+                                            Toast.makeText(this, "Not updated in child(Items)", Toast.LENGTH_LONG).show()
+                                        }
+                                }.addOnFailureListener {
+                                    Toast.makeText(this, "Try adding item to wishlist again", Toast.LENGTH_LONG).show()
+                                }
+                            }
+
+                        } else {
+                            Toast.makeText(this, "Data not exists", Toast.LENGTH_SHORT).show()
+                        }
+                    }.addOnFailureListener {
+                        Toast.makeText(this, "Failed to load data, please try again", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                }
+
 
 //################################################ Go to cart page ##########################################
-        val cart = findViewById<ImageView>(R.id.itemView_cartBtn)
 
-        cart.setOnClickListener {
-            startActivity(Intent(this,CartActivity::class.java))
-        }
-//###########################################################################################################
+        binding.itemViewCartBtn.setOnClickListener {
+                startActivity(Intent(this, CartActivity::class.java))
+            }
 
-        }
+//############################################## Remove item from favorites ###########################################
+
 
 
     }
+//######################################################################################################################
+
+    private fun addToCart(itemUid: String, itemImage: String?, itemName: String, itemPrice: String, itemQuantity: String,
+        isFavorite: String?) {
+
+        val itemPath = mDbRef.child("Users").child(auth.currentUser?.uid!!).child("Cart").child(itemUid)
+
+        val itemDetails = Items(itemUid, itemImage!!, itemName, itemPrice, itemDescription!!, itemQuantity,
+            "1", null, isFavorite)
+
+        itemPath.setValue(itemDetails).addOnSuccessListener {
+
+            Toast.makeText(this, "Item added to cart", Toast.LENGTH_LONG).show()
+            binding.itemViewAddToCartBtn.text = "Go to Cart"
+        }
+    }
+
+}
+
+

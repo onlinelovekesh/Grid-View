@@ -3,6 +3,7 @@ package com.example.gridlayout
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -39,30 +40,24 @@ class CartActivity : AppCompatActivity() {
 
         getCartItems()
 
+
     }
 
     private fun getCartItems() {
-
         myDbRef.child("Users").child(auth.currentUser?.uid!!).child("Cart")
             .addValueEventListener(object : ValueEventListener{
 
                 @SuppressLint("NotifyDataSetChanged")
                 override fun onDataChange(snapshot: DataSnapshot) {
-
                     items.clear()
-
                     for (eachItem in snapshot.children){
                         val allItems = eachItem.getValue(Items::class.java)
                         items.add(allItems!!)
                         //progressBar.visibility = View.GONE
-
                     }
                     adapter.notifyDataSetChanged()
                 }
-
                 override fun onCancelled(error: DatabaseError) { }
-
             })
-
     }
 }

@@ -10,12 +10,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gridlayout.databinding.ActivityMainBinding
+import com.example.gridlayout.databinding.ActivityWishListBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
-class MainActivity : AppCompatActivity() {
+class WishList : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityWishListBinding
 
     private lateinit var auth: FirebaseAuth
     private lateinit var myDbRef: DatabaseReference
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_wish_list)
 
         auth = FirebaseAuth.getInstance()
         myDbRef = FirebaseDatabase.getInstance().reference
@@ -40,23 +41,21 @@ class MainActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
 
-        binding.addNewItem.setOnClickListener {
-            startActivity(Intent(this,AddNewItem::class.java))
-        }
-        binding.goToCart.setOnClickListener {
+        binding.wishListCartBtn.setOnClickListener {
             startActivity(Intent(this,CartActivity::class.java))
         }
 
-        binding.mainActivityFavoriteBtn.setOnClickListener {
+        getItems(progressBar)
+
+        binding.wishListFavoriteBtn.setOnClickListener {
             startActivity(Intent(this,WishList::class.java))
         }
-
-        getItems(progressBar)
+        
     }
 
     private fun getItems(progressBar: ProgressBar) {
 
-        myDbRef.child("Users").child(auth.currentUser?.uid!!).child("Items")
+        myDbRef.child("Users").child(auth.currentUser?.uid!!).child("WishList")
             .addValueEventListener(object : ValueEventListener{
 
                 @SuppressLint("NotifyDataSetChanged")

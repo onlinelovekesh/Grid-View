@@ -144,16 +144,18 @@ class AddNewItem : AppCompatActivity() {
         val itemName = findViewById<EditText>(R.id.newItem_name).text.toString()
         val itemPrice = findViewById<EditText>(R.id.newItem_price).text.toString()
         val description = findViewById<EditText>(R.id.newItem_description).text.toString()
+        val quantity = findViewById<EditText>(R.id.newItem_quantity).text.toString()
 
         val newItem = mDbRef.child("Users").child(auth.currentUser?.uid!!).child("Items").push()
-        val itemDetails = Items(newItem.key!!, profileImageUri, itemName, "Rs. $itemPrice",
-            description,"1")
+        val itemDetails = Items(newItem.key!!, profileImageUri, itemName, ("Rs. $itemPrice"),
+            description,quantity,null,null,null)
 
         newItem.setValue(itemDetails).addOnSuccessListener {
 
             Toast.makeText(this, "Item added successfully", Toast.LENGTH_LONG).show()
-            val i = Intent(this, AddNewItem::class.java)
+            val i = Intent(this, MainActivity::class.java)
             startActivity(i)
+            finish()
         }
 
     }

@@ -10,33 +10,47 @@
     android:background="@color/background">
 
     <LinearLayout
-        android:id="@+id/action_bar"
+        android:id="@+id/mainActivity_actionBar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginTop="0dp"
         android:orientation="horizontal"
-        android:weightSum="5"
+        android:textSize="20sp"
         android:background="@color/purple_500"
-        android:gravity="end">
-
+        android:weightSum="5"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"/>
         <ImageButton
             android:id="@+id/addNewItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:background="@color/purple_500"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/add_new_foreground" />
+            android:src="@drawable/add_new_foreground"
+            android:layout_marginVertical="10dp"
+            android:layout_marginEnd="10dp"/>
 
-        <ImageButton
+        <ImageView
+            android:id="@+id/mainActivity_favoriteBtn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@drawable/favorite_icon_filled"
+            android:layout_weight=".25"
+            android:layout_marginVertical="10dp"
+            android:layout_marginEnd="10dp" />
+        <ImageView
             android:id="@+id/goToCart"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:background="@color/purple_500"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/cart_foreground" />
+            android:src="@drawable/cart_foreground"
+            android:layout_weight=".25"
+            android:layout_marginVertical="10dp"
+            android:layout_marginEnd="10dp"/>
 
     </LinearLayout>
 
@@ -56,7 +70,7 @@
         android:id="@+id/itemView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/action_bar" />
+        android:layout_below="@id/mainActivity_actionBar" />
 
 </RelativeLayout>
 </layout>

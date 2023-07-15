@@ -56,21 +56,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:adjustViewBounds="true"
+                    android:src="@mipmap/select_image"
+                    android:background="@color/background"
                     android:contentDescription="@string/app_name"
-                    android:padding="0dp"
+                    android:adjustViewBounds="true"
                     android:scaleType="fitXY"
-                    android:src="@color/background"
+                    android:padding="0dp"
+                    android:cropToPadding="true"
                     android:layout_below="@id/newItem_actionBar"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:text="Add Image"
-                    android:textColor="@color/purple_500"
-                    android:textSize="15sp"/>
 
             </androidx.cardview.widget.CardView>
 
@@ -94,7 +87,7 @@
                     android:focusableInTouchMode="true"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:hint="@string/item_name"
-                    android:inputType="textPersonName"
+                    android:inputType="textCapSentences"
                     android:paddingHorizontal="15dp"
                     android:textColor="@color/black"
                     android:textColorHint="#6C6C6C"
@@ -165,6 +158,35 @@
                     android:minLines="5"
                     android:scrollHorizontally="false"
                     android:scrollbars="vertical" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/newItem_quantityLayout"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="4dp"
+                android:background="@color/white">
+
+                <EditText
+                    android:id="@+id/newItem_quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:hint="Enter available quantity"
+                    android:inputType="number"
+                    android:paddingHorizontal="15dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="#6C6C6C"
+                    android:textSize="18sp"
+                    android:background="@color/background"
+                    android:autofillHints="name" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
